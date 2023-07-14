@@ -24,6 +24,9 @@ fetch("https://jsonplaceholder.typicode.com/todos")
     // Handle any errors that occurred during the fetch request
     console.log("Error:", error.message);
   });
+   
+  // --id;
+  todolistarray.pop();
 
 // Function to add a task to the array
 function addtask(task) {
@@ -44,20 +47,20 @@ function renderlist() {
   const listContainer = document.getElementById("listitems");
   listContainer.innerHTML = "";
 
-  for (let i = 0; i < todolistarray.length; i++) {
+  for (let i = 0; i<todolistarray.length; i++) {
     const listItem = document.createElement("li");
     listItem.innerHTML = todolistarray[i].taskDetails;
 
-    const deleteButton = document.createElement("button");
-    deleteButton.innerHTML = "Delete";
+    const deletebtn = document.createElement("button");
+    deletebtn.innerHTML = "Delete";
 
     const x = todolistarray[i].id;
-    deleteButton.addEventListener("click", () => {
+    deletebtn.addEventListener("click", () => {
       deletetask(x);
       renderlist();
     });
 
-    listItem.appendChild(deleteButton);
+    listItem.appendChild(deletebtn);
     listContainer.appendChild(listItem);
   }
 }
