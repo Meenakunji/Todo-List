@@ -1,4 +1,3 @@
-// Todo list array
 let todolistarray = [];
 
 let id = 0;
@@ -24,16 +23,11 @@ fetch("https://jsonplaceholder.typicode.com/todos")
     // Handle any errors that occurred during the fetch request
     console.log("Error:", error.message);
   });
-   
-  // --id;
-  todolistarray.pop();
 
-// Function to add a task to the array
 function addtask(task) {
   todolistarray.push(task);
 }
 
-// Function to delete a task from the array
 function deletetask(id) {
   const index = todolistarray.findIndex((task) => task.id === id);
   if (index !== -1) {
@@ -41,47 +35,82 @@ function deletetask(id) {
   }
 }
 
-// Function to render the todo list
+function savetask(id, newval) {
+  const taskIndex = todolistarray.findIndex((task) => task.id === id);
+  if (taskIndex !== -1) {
+    todolistarray[taskIndex].taskDetails = newval;
+  }
+}
 
 function renderlist() {
-  const listContainer = document.getElementById("listitems");
-  listContainer.innerHTML = "";
+  const listcontainer = document.getElementById("listitems");
+  listcontainer.innerHTML = "";
 
-  for (let i = 0; i<todolistarray.length; i++) {
+  for (let i = 0; i < todolistarray.length; i++) {
     const listItem = document.createElement("li");
-    listItem.innerHTML = todolistarray[i].taskDetails;
+
+    const taskText = document.createElement("span");
+    taskText.innerHTML = todolistarray[i].taskDetails;
+
+    const buttonsbox = document.createElement("div");
+    buttonsbox.classList.add("buttons-container");
+
+    const editicon = document.createElement("img");
+    editicon.src = "https://cdn-icons-png.flaticon.com/512/3597/3597088.png";
+    editicon.alt = "Edit";
+    editicon.classList.add("edit-icon");
 
     const deletebtn = document.createElement("button");
     deletebtn.innerHTML = "Delete";
 
-    const x = todolistarray[i].id;
+    const taskID = todolistarray[i].id;
+
+    editicon.addEventListener("click", () => {
+      const editinput = document.createElement("input");
+      editinput.type = "text";
+      editinput.value = todolistarray[i].taskDetails;
+
+      const savebtn = document.createElement("button");
+      savebtn.innerHTML = "Save";
+      savebtn.classList.add("save-button");
+
+      savebtn.addEventListener("click", () => {
+        savetask(taskID, editinput.value);
+        renderlist();
+      });
+
+      listItem.innerHTML = "";
+      listItem.appendChild(editinput);
+      listItem.appendChild(savebtn);
+    });
+
     deletebtn.addEventListener("click", () => {
-      deletetask(x);
+      deletetask(taskID);
       renderlist();
     });
 
-    listItem.appendChild(deletebtn);
-    listContainer.appendChild(listItem);
+    buttonsbox.appendChild(editicon);
+    buttonsbox.appendChild(deletebtn);
+
+    listItem.appendChild(taskText);
+    listItem.appendChild(buttonsbox);
+
+    listcontainer.appendChild(listItem);
   }
 }
 
-// Add click event listener to the save button
 const savebtn = document.getElementById("savebtn");
 
-savebtn.addEventListener(
-  "click",
-  (prinitem = () => {
-    const taskinput = document.getElementById("taskinput");
-
+savebtn.addEventListener("click", (prinitem = ()=>{
+    const taskInput = document.getElementById("taskinput");
     const task = {
       id: todolistarray.length + 1,
-      taskDetails: taskinput.value,
+      taskDetails: taskInput.value,
     };
     addtask(task);
-    taskinput.value = "";
+    taskInput.value = "";
     renderlist();
   })
 );
 
-// Initial rendering of the todo list
 renderlist();
