@@ -23,6 +23,7 @@ fetch("https://jsonplaceholder.typicode.com/todos")
     // Handle any errors that occurred during the fetch request
     console.log("Error:", error.message);
   });
+  --id;
 
 function addtask(task) {
   todolistarray.push(task);
@@ -47,25 +48,29 @@ function renderlist() {
   listcontainer.innerHTML = "";
 
   for (let i = 0; i < todolistarray.length; i++) {
+    if(todolistarray[i].taskDetails == ""){
+      continue;
+    }
     const listItem = document.createElement("li");
-
     const taskText = document.createElement("span");
     taskText.innerHTML = todolistarray[i].taskDetails;
 
     const buttonsbox = document.createElement("div");
-    buttonsbox.classList.add("buttons-container");
+    buttonsbox.classList.add("btncontainer");
 
     const editicon = document.createElement("img");
     editicon.src = "https://cdn-icons-png.flaticon.com/512/3597/3597088.png";
     editicon.alt = "Edit";
     editicon.classList.add("edit-icon");
 
-    const deletebtn = document.createElement("button");
-    deletebtn.innerHTML = "Delete";
+    const deletebtn = document.createElement("img");
+
+    deletebtn.src = "https://cdn-icons-png.flaticon.com/512/3405/3405244.png";
+    deletebtn.alt = "delete"
 
     const taskID = todolistarray[i].id;
 
-    editicon.addEventListener("click", () => {
+    editicon.addEventListener("click", ()=>{
       const editinput = document.createElement("input");
       editinput.type = "text";
       editinput.value = todolistarray[i].taskDetails;
@@ -74,7 +79,7 @@ function renderlist() {
       savebtn.innerHTML = "Save";
       savebtn.classList.add("save-button");
 
-      savebtn.addEventListener("click", () => {
+      savebtn.addEventListener("click", ()=>{
         savetask(taskID, editinput.value);
         renderlist();
       });
@@ -84,7 +89,7 @@ function renderlist() {
       listItem.appendChild(savebtn);
     });
 
-    deletebtn.addEventListener("click", () => {
+    deletebtn.addEventListener("click", ()=>{
       deletetask(taskID);
       renderlist();
     });
@@ -102,13 +107,13 @@ function renderlist() {
 const savebtn = document.getElementById("savebtn");
 
 savebtn.addEventListener("click", (prinitem = ()=>{
-    const taskInput = document.getElementById("taskinput");
+    const taskinput = document.getElementById("taskinput");
     const task = {
-      id: todolistarray.length + 1,
-      taskDetails: taskInput.value,
+      id: todolistarray.length+1,
+      taskDetails: taskinput.value,
     };
     addtask(task);
-    taskInput.value = "";
+    taskinput.value = "";
     renderlist();
   })
 );

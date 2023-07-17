@@ -66,19 +66,18 @@ li {
     border-radius: 4px;
 }
 
-li button {
-    background-color: #ff5c5c;
-    margin-left: 10px;
-}
-.buttons-container{
+
+.btncontainer{
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.buttons-container img{
+.btncontainer img{
     height: 20px;
     width: 20px;
+    margin-left: 10px;
+    cursor: pointer;
 }
 .save-button{
     background-color: rgb(76, 175, 80);
