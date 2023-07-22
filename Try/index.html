@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Todo List</title>
+</head>
+<body>
+  <input type="text" id="taskinput" placeholder="Enter task">
+  <input type="text" id="dueDateInput" placeholder="Due date (e.g., tomorrow, 13th Jan 2023 3 pm)">
+  <select id="priorityInput">
+    <option value="low">Low</option>
+    <option value="medium">Medium</option>
+    <option value="high">High</option>
+  </select>
+  <button id="savebtn">Save</button>
+  <ul id="listitems"></ul>
+
+  <script>
+    let todolistarray = [];
+
+    function addtask(task) {
+      todolistarray.push(task);
+    }
+
+    function deletetask(id) {
+      const index = todolistarray.findIndex((task) => task.id === id);
+      if (index !== -1) {
+        todolistarray.splice(index, 1);
+      }
+    }
+
+    function markAsDone(id) {
+      const task = todolistarray.find((task) => task.id === id);
+      if (task) {
+        task.isDone = true;
+      }
+    }
+
+    function markAsUndone(id) {
+      const task = todolistarray.find((task) => task.id === id);
+      if (task) {
+        task.isDone = false;
+      }
+    }
+
+    function addCategory(id, category) {
+      const task = todolistarray.find((task) => task.id === id);
+      if (task) {
+        task.category = category;
+      }
+    }
+
+    function addTag(id, tag) {
+      const task = todolistarray.find((task) => task.id === id);
+      if (task) {
+        if (!task.tags) {
+          task.tags = [];
+        }
+        task.tags.push(tag);
+      }
+    }
+
+    function addDueDate(id, dueDate) {
+      const task = todolistarray.find((task) => task.id === id);
+      if (task) {
+        task.dueDate = dueDate;
+      }
+    }
+
+    function addPriority(id, priority) {
+      const task = todolistarray.find((task) => task.id === id);
+      if (task) {
+        task.priority = priority;
+      }
+    }
+
+    function savetask(id, newval) {
+      const taskIndex = todolistarray.findIndex((task) => task.id === id);
+      if (taskIndex !== -1) {
+        todolistarray[taskIndex].taskDetails = newval;
+      }
+    }
+
+    function renderlist() {
+      const listcontainer = document.getElementById("listitems");
+      listcontainer.innerHTML = "";
+
+      for (let i = 0; i < todolistarray.length; i++) {
+        if (todolistarray[i].taskDetails === "") {
+          continue;
+        }
+
+        const listItem = document.createElement("li");
+        const taskText = document.createElement("span");
+        taskText.innerHTML = todolistarray[i].taskDetails;
+
+        // Add class to completed tasks
+        if (todolistarray[i].isDone) {
+          listItem.classList.add("completed");
+        }
+
+        const buttonsbox = document.createElement("div");
+        buttonsbox.classList.add("btncontainer");
+
+        const editicon = document.createElement("img");
+        editicon.src =
+          "https://cdn-icons-png.flaticon.com/512/3597/3597088.png";
+        editicon.alt = "Edit";
+
+        const deletebtn = document.createElement("img");
+        deletebtn.src =
+          "https://cdn-icons-png.flaticon.com/512/3405/3405244.png";
+        deletebtn.alt = "delete";
+
+        const donebtn = document.createElement("button");
+        donebtn.innerHTML = "Mark as Done";
+        donebtn.addEventListener("click", () => {
+          markAsDone(todolistarray[i].id);
+          renderlist();
+        });
+
+        const undonebtn = document.createElement("button");
+        undonebtn.innerHTML = "Mark as Undone";
+        undonebtn.addEventListener("click", () => {
+          markAsUndone(todolistarray[i].id);
+          renderlist();
+        });
+
+        const categoryInput = document.createElement("input");
+        categoryInput.type = "text";
+        categoryInput.placeholder = "Category";
+
+        const tagInput = document.createElement("input");
+        tagInput.type = "text";
+        tagInput.placeholder = "Tags (comma separated)";
+
+        const dueDateInput = document.createElement("input");
+        dueDateInput.type = "text";
+        dueDateInput.placeholder = "Due date (e.g., tomorrow, 13th Jan 2023 3 pm)";
+
+        const priorityInput = document.createElement("select");
+        priorityInput.innerHTML = `<option value="low">Low</option>
+                                     <option value="medium">Medium</option>
+                                     <option value="high">High</option>`;
+        
+        const categorybtn = document.createElement("button");
+        categorybtn.innerHTML = "Add Category";
+        categorybtn.addEventListener("click", () => {
+          addCategory(todolistarray[i].id, categoryInput.value);
+          renderlist();
+        });
+
+        const tagbtn = document.createElement("button");
+        tagbtn.innerHTML = "Add Tags";
+        tagbtn.addEventListener("click", () => {
+          const tags = tagInput.value.split(",");
+          for (const tag of tags) {
+            addTag(todolistarray[i].id, tag.trim());
+          }
+          renderlist();
+        });
+
+        const dueDatebtn = document.createElement("button");
+        dueDatebtn.innerHTML = "Add Due Date";
+        dueDatebtn.addEventListener("click", () => {
+          addDueDate(todolistarray[i].id, dueDateInput.value);
+          renderlist();
+        });
+
+        const prioritybtn = document.createElement("button");
+        prioritybtn.innerHTML = "Add Priority";
+        prioritybtn.addEventListener("click", () => {
+          addPriority(todolistarray[i].id, priorityInput.value);
+          renderlist();
+        });
+
+        const taskID = todolistarray[i].id;
+
+        editicon.addEventListener("click", () => {
+          const editinput = document.createElement("input");
+          editinput.type = "text";
+          editinput.value = todolistarray[i].taskDetails;
+
+          const savebtn = document.createElement("button");
+          savebtn.innerHTML = "Save";
+          savebtn.classList.add("save-button");
+
+          savebtn.addEventListener("click", () => {
+            savetask(taskID, editinput.value);
+            renderlist();
+          });
+
+          listItem.innerHTML = "";
+          listItem.appendChild(editinput);
+          listItem.appendChild(savebtn);
+        });
+
+        deletebtn.addEventListener("click", () => {
+          deletetask(taskID);
+          renderlist();
+        });
+
+        buttonsbox.appendChild(editicon);
+        buttonsbox.appendChild(deletebtn);
+
+        listItem.appendChild(taskText);
+        listItem.appendChild(buttonsbox);
+
+        if (!todolistarray[i].isDone) {
+          listItem.appendChild(donebtn);
+        } else {
+          listItem.appendChild(undonebtn);
+        }
+
+        listItem.appendChild(categoryInput);
+        listItem.appendChild(categorybtn);
+
+        listItem.appendChild(tagInput);
+        listItem.appendChild(tagbtn);
+
+        listItem.appendChild(dueDateInput);
+        listItem.appendChild(dueDatebtn);
+
+        listItem.appendChild(priorityInput);
+        listItem.appendChild(prioritybtn);
+
+        listcontainer.appendChild(listItem);
+      }
+    }
+
+    // View Backlogs: Filter tasks based on isDone property
+    function viewBacklogs() {
+      return todolistarray.filter((task) => !task.isDone);
+    }
+
+    // Activity Logs: Log task-related activities
+    const activityLog = [];
+
+    function logActivity(task, action) {
+      activityLog.push({ task: task.taskDetails, action, timestamp: new Date() });
+    }
+
+    // Search functionalities
+    function searchExactTodo(taskName) {
+      return todolistarray.filter((task) => task.taskDetails === taskName);
+    }
+
+    function searchSubtasks(subtaskName) {
+      return todolistarray.filter((task) => {
+        if (task.subtasks) {
+          return task.subtasks.some((subtask) => subtask.taskDetails.includes(subtaskName));
+        }
+        return false;
+      });
+    }
+
+    function searchSimilarWords(searchTerm) {
+      return todolistarray.filter((task) => task.taskDetails.includes(searchTerm));
+    }
+
+    function searchPartialKeyword(keyword) {
+      return todolistarray.filter((task) => task.taskDetails.toLowerCase().includes(keyword.toLowerCase()));
+    }
+
+    function searchByTags(tag) {
+      return todolistarray.filter((task) => task.tags && task.tags.includes(tag));
+    }
+
+    // Call this function to load data from local storage
+    function loadFromLocalStorage() {
+      const storedData = JSON.parse(localStorage.getItem("todolist"));
+      if (storedData) {
+        todolistarray = storedData;
+        renderlist();
+      }
+    }
+
+    // Save data to local storage
+    function saveToLocalStorage() {
+      localStorage.setItem("todolist", JSON.stringify(todolistarray));
+    }
+
+    // Call this function to load data from local storage
+    loadFromLocalStorage();
+
+    // Save data to local storage whenever the list changes
+    window.addEventListener("beforeunload", saveToLocalStorage);
+  </script>
+</body>
+</html>

@@ -12,9 +12,50 @@
   <div class="container">
     <h2>Todo List</h2>
     <div class="box">
+      <div class="navbox1">
       <input type="text" id="taskinput" placeholder="Enter a task">
+      <input type="text" id="taginput" placeholder="Enter tags">
+      <input type="date" id="dueDateInput" placeholder="Due date (e.g., tomorrow, 13th Jan 2023 3 pm)">
+      <select id="priorityInput">
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
       <button id="savebtn">Save</button>
     </div>
+      <br>
+      <!-- <input type="date" name="" id=""> -->
+      <div class="navbox2">
+      <label>Filter by Due Date:</label>
+      <input type="date" id="filterDueDate" placeholder="Enter due date">
+      <label>Filter by Category:</label>
+      <input type="text" id="filterCategory" placeholder="Enter category">
+      <label>Filter by Priority:</label>
+      <select id="filterPriority">
+        <option value="">All</option>
+        <option value="low">Low</option>
+        <option value="medium">Medium</option>
+        <option value="high">High</option>
+      </select>
+      <button id="filterBtn">Filter</button>
+    </div>
+       <div class="navbox3">
+      <label for="sortSelect">Sort by:</label>
+      <select id="sortSelect">
+        <option value="default">Default</option>
+        <option value="dueDate">Due Date</option>
+        <option value="priority">Priority</option>
+      </select>
+      <button id="sortbtn">Sort</button>
+      <button id="backlogBtn">View Backlogs</button> 
+      
+      <input type="text" id="searchinput" placeholder="Search tasks">
+       <button id="searchbtn">Search</button>
+
+    </div>
+      
+    </div>
+    
     
     <ul id="listitems"></ul>
   </div>
